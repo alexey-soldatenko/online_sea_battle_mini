@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+{%load staticfiles%}
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="{% static 'index.css' %} ">
+	<script type="text/javascript">
+
+	function close_rules(){
+		var global_wrap = document.getElementById('global_wrap');
+		global_wrap.style.display = 'none';
+	}
+
+	function on_load(){
+		var submit = document.getElementById('fix_position');
+		submit.disabled = true;
+
+		var reload_button = document.getElementById("reload_button");
+		
+		reload_button.style.cssText="display: none;\
+		margin-top: 5px;\
+			margin-bottom: 5px;\
+			margin-left: 20px;\
+			background: rgba(255, 69, 0, 0.7);\
+			color: white;\
+			border-radius: 10px;\
+			border: none;\
+			cursor: pointer;\
+			padding: 5px;\
+			font: inherit;\
+			box-shadow: 0 0 5px black;\
+  			";
+	}
+
+//запрос на подтверждение активности
+	function time_action(){
+	var httpRequest = new XMLHttpRequest();
+	httpRequest.open("POST", "/time_action", true);
+
+	 var csrf = getCookie('csrftoken');
+
+    httpRequest.setRequestHeader("X-CSRFToken", csrf);
+ 
+    httpRequest.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+ 
+    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+
+
+	httpRequest.onreadystatechange = function(){
+		if (httpRequest.readyState == 4 && httpRequest.status == 200){
+			var answer = httpRequest.responseText;
+		}
+	}
+	httpRequest.send();
+}
+
+	var timer_func = setInterval(time_action, 60000);
+
+	</script>
+<script type="text/javascript" src=" {% static 'rules.js' %} "></script>
+<script type="text/javascript" src="{% static 'ajax_requests.js' %} "></script>
+
+</head>
+
+<body onload="on_load();">
+
+<div id="message">
+<img style="float: left;" width="70px" src="{% static 'corsar.png' %} ">
+	<div id="message_text" style="margin-top: 20px; width: 230px; margin-left: 70px;">Добро пожаловать, капитан!
+
+	</div>
+	<button id="reload_button" onclick="window.location.reload(true);">Начать заново</button>
+</div> 
+
+
+<div id="global_wrap">
+<div id="rules">
+	<div style="position: absolute; top: 10px; right: 10px;"><img style="cursor: pointer;" width="30px" src="{% static 'close.png' %} " onclick="close_rules()"></div>
+	<div style="margin-left: 50px; width: 500px;">
+	<p style="text-align: center;">Правила очень просты.</p>
+	<p>Каждому игроку под командование даётся однопалубная весельная шлюпка для диверсионных операций и двухпалубный катер для атаки с дальней дистанции.</p> 
+	<p>Победитель тот, кто первым пустит на дно обе команды противника.</p>
+	<p>Ваши корабли должны распологаться минимум через клетку друг от друга.</p>
+	<p>Например:</p>
+	
+	<div style="clear: both; float: left; margin-left: 40px;">
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell" style="background: red;"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell" style="background: red;"></div>
+		<div class="cell" style="background: red;"></div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+	</div>
+	</div>
+
+	<div style="float: left;">
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell" style="background: red;"></div>
+		<div class="cell"></div>
+		<div class="cell" style="background: red;"></div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell" style="background: red;"></div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+	</div>
+	</div>
+
+	<div style="float: left;">
+	<div class="row">
+		<div class="cell" style="background: red;"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+		<div class="cell"></div>
+	</div>
+	<div class="row">
+		<div class="cell"></div>
+		<div class="cell" style="background: red;"></div>
+		<div class="cell" style="background: red;"></div>
+		<div class="cell"></div>
+	</div>
+	</div>
+
+	</div>
+</div>
+</div>
+
+
+<div class="all_box">
+
+<div class="button">
+	<span>Быстрый морской бой. Победа меньше, чем за минуту.</span>
+</div>
+
+<div class="left">
+
+<span>Мой флот</span>
+<div class="field">
+	<div class="row">
+		<div class="cell" id="my_field_1" onclick="add_cell('my_field_1')"></div>
+		<div class="cell" id="my_field_2" onclick="add_cell('my_field_2')"></div>
+		<div class="cell" id="my_field_3" onclick="add_cell('my_field_3')"></div>
+		<div class="cell" id="my_field_4" onclick="add_cell('my_field_4')"></div>
+	</div>
+	<div class="row">
+		<div class="cell" id="my_field_5" onclick="add_cell('my_field_5')"></div>
+		<div class="cell" id="my_field_6" onclick="add_cell('my_field_6')"></div>
+		<div class="cell" id="my_field_7" onclick="add_cell('my_field_7')"></div>
+		<div class="cell" id="my_field_8" onclick="add_cell('my_field_8')"></div>
+	</div>
+	<div class="row">
+		<div class="cell" id="my_field_9" onclick="add_cell('my_field_9')"></div>
+		<div class="cell" id="my_field_10" onclick="add_cell('my_field_10')"></div>
+		<div class="cell" id="my_field_11" onclick="add_cell('my_field_11')"></div>
+		<div class="cell" id="my_field_12" onclick="add_cell('my_field_12')"></div>
+	</div>
+	<div class="row">
+		<div class="cell" id="my_field_13" onclick="add_cell('my_field_13')"></div>
+		<div class="cell" id="my_field_14" onclick="add_cell('my_field_14')"></div>
+		<div class="cell" id="my_field_15" onclick="add_cell('my_field_15')"></div>
+		<div class="cell" id="my_field_16" onclick="add_cell('my_field_16')"></div>
+	</div>
+	</div>
+	<div style="clear:both; text-align: left; padding: 10px;">
+	<span>Расставляйте ваши корабли:</span><br>
+	<span>1 - однопалубный;</span>
+	<span><img style="width: 20px;" src="{% static 'galka.png' %} "></span><br>
+	<span>1 - двухпалубный.</span>
+	<span><img style="width: 20px;" src="{% static 'galka.png' %} "></span><br><br>
+	<div class="button">
+	<button id="fix_position" onclick="fix_my_position(); return false;" disabled>Занять позиции</button>
+	</div>
+	</div>
+<div id="wrap_left" style="backround: black; opacity: 0.2; position: absolute; width: 100%; height: 100%; top: 0; padding: 0;">
+</div>
+</div>
+
+<div class="right">
+<span>Противник</span>
+	<div class="row">
+		<div class="cell" id="enemy_field_1" onclick="shoot('1')"></div>
+		<div class="cell" id="enemy_field_2" onclick="shoot('2')"></div>
+		<div class="cell" id="enemy_field_3" onclick="shoot('3')"></div>
+		<div class="cell" id="enemy_field_4" onclick="shoot('4')"></div>
+	</div>
+	<div class="row">
+		<div class="cell" id="enemy_field_5" onclick="shoot('5')"></div>
+		<div class="cell" id="enemy_field_6" onclick="shoot('6')"></div>
+		<div class="cell" id="enemy_field_7" onclick="shoot('7')"></div>
+		<div class="cell" id="enemy_field_8" onclick="shoot('8')"></div>
+	</div>
+	<div class="row">
+		<div class="cell" id="enemy_field_9" onclick="shoot('9')"></div>
+		<div class="cell" id="enemy_field_10" onclick="shoot('10')"></div>
+		<div class="cell" id="enemy_field_11" onclick="shoot('11')"></div>
+		<div class="cell" id="enemy_field_12" onclick="shoot('12')"></div>
+	</div>
+	<div class="row">
+		<div class="cell" id="enemy_field_13" onclick="shoot('13')"></div>
+		<div class="cell" id="enemy_field_14" onclick="shoot('14')"></div>
+		<div class="cell" id="enemy_field_15" onclick="shoot('15')"></div>
+		<div class="cell" id="enemy_field_16" onclick="shoot('16')"></div>
+	</div>
+	<div style="padding: 10px; color: white;">
+	<span id="step"></span>
+	</div>
+<div id="wrap_right" style="backround: black; opacity: 0.8; position: absolute; width: 100%; height: 100%; top: 0; padding: 0;">
+</div>
+
+</div>
+
+</body>
+</html>
